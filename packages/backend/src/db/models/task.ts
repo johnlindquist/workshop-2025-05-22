@@ -1,4 +1,5 @@
 import { DatabaseConnection } from '../connection';
+import { logger } from '../../lib/logger';
 
 // TypeScript interfaces matching OpenAPI Task schema
 export interface Task {
@@ -108,6 +109,7 @@ export class TaskModel {
         ];
 
         await this.db.executeQuery(query, params);
+        logger.debug('db=task op=create', { id, title: data.title, userId });
 
         const task = await this.getTaskById(id);
         if (!task) {
@@ -120,7 +122,7 @@ export class TaskModel {
     async getTaskById(id: string): Promise<Task | null> {
         const query = 'SELECT * FROM tasks WHERE id = ?';
         const row = await this.db.executeQueryFirst<TaskRow>(query, [id]);
-
+        logger.debug('db=task op=read', { id });
         return row ? this.rowToTask(row) : null;
     }
 
@@ -154,7 +156,7 @@ export class TaskModel {
         }
 
         query += ' ORDER BY createdAt DESC';
-
+        logger.debug('db=task op=readAll', { filters });
         const rows = await this.db.executeQueryAll<TaskRow>(query, params);
         return rows.map(row => this.rowToTask(row));
     }
@@ -209,6 +211,7 @@ export class TaskModel {
         params.push(id);
 
         await this.db.executeQuery(query, params);
+        logger.debug('db=task op=update', { id, data });
 
         return await this.getTaskById(id);
     }
@@ -216,14 +219,14 @@ export class TaskModel {
     async deleteTask(id: string): Promise<boolean> {
         const query = 'DELETE FROM tasks WHERE id = ?';
         const result = await this.db.executeQuery(query, [id]);
-
+        logger.debug('db=task op=delete', { id });
         return (result.meta?.changes || 0) > 0;
     }
 
     async getTaskByShareId(shareId: string): Promise<Task | null> {
         const query = 'SELECT * FROM tasks WHERE shareId = ? AND isPublic = 1';
         const row = await this.db.executeQueryFirst<TaskRow>(query, [shareId]);
-
+        logger.debug('db=task op=readShare', { shareId });
         return row ? this.rowToTask(row) : null;
     }
 
@@ -234,7 +237,7 @@ export class TaskModel {
         const params = [shareId, new Date().toISOString(), id];
 
         const result = await this.db.executeQuery(query, params);
-
+        logger.debug('db=task op=makePublic', { id });
         return (result.meta?.changes || 0) > 0 ? shareId : null;
     }
 
@@ -243,7 +246,7 @@ export class TaskModel {
         const params = [new Date().toISOString(), id];
 
         const result = await this.db.executeQuery(query, params);
-
+        logger.debug('db=task op=makePrivate', { id });
         return (result.meta?.changes || 0) > 0;
     }
 
@@ -260,6 +263,7 @@ export class TaskModel {
     `;
 
         const result = await this.db.executeQuery(query, [now, now]);
+        logger.debug('db=task op=updateOverdue');
         return result.meta?.changes || 0;
     }
 
@@ -273,7 +277,7 @@ export class TaskModel {
         }
 
         query += ' ORDER BY dueDate ASC';
-
+        logger.debug('db=task op=readOverdue', { userId });
         const rows = await this.db.executeQueryAll<TaskRow>(query, params);
         return rows.map(row => this.rowToTask(row));
     }
