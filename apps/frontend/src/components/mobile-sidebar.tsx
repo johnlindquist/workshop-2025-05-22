@@ -1,7 +1,18 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Menu, X, LightbulbIcon, Bell, Tag, Archive, Trash2, Rocket, Zap, Star } from "lucide-react"
+import { useState } from 'react'
+import {
+  Menu,
+  X,
+  LightbulbIcon,
+  Bell,
+  Tag,
+  Archive,
+  Trash2,
+  Rocket,
+  Zap,
+  Star,
+} from 'lucide-react'
 
 export default function MobileSidebar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -9,6 +20,7 @@ export default function MobileSidebar() {
   return (
     <div className="md:hidden">
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
         className="p-2 text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 rounded-full transition-colors"
       >
@@ -31,6 +43,8 @@ export default function MobileSidebar() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    role="img"
+                    aria-label="Cosmo Notes logo"
                   >
                     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
                     <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
@@ -41,6 +55,7 @@ export default function MobileSidebar() {
                 </span>
               </div>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
                 className="p-2 text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 rounded-full transition-colors"
               >
@@ -50,76 +65,76 @@ export default function MobileSidebar() {
             <nav className="p-3">
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md shadow-cyan-200/50"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md shadow-cyan-200/50 w-full"
                   >
                     <LightbulbIcon className="mr-4 h-5 w-5" />
                     <span className="font-medium">Notes</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-cyan-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-cyan-50 transition-colors w-full"
                   >
                     <Bell className="mr-4 h-5 w-5 text-pink-500" />
                     <span>Reminders</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-pink-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-pink-50 transition-colors w-full"
                   >
                     <Rocket className="mr-4 h-5 w-5 text-purple-500" />
                     <span>Inspiration</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-yellow-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-yellow-50 transition-colors w-full"
                   >
                     <Star className="mr-4 h-5 w-5 text-yellow-500" />
                     <span>Personal</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-purple-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-purple-50 transition-colors w-full"
                   >
                     <Zap className="mr-4 h-5 w-5 text-cyan-500" />
                     <span>Work</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-cyan-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-cyan-50 transition-colors w-full"
                   >
                     <Tag className="mr-4 h-5 w-5 text-pink-500" />
                     <span>Edit labels</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-pink-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-pink-50 transition-colors w-full"
                   >
                     <Archive className="mr-4 h-5 w-5 text-purple-500" />
                     <span>Archive</span>
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-yellow-50 transition-colors"
+                  <button
+                    type="button"
+                    className="flex items-center rounded-full px-6 py-3 text-slate-700 hover:bg-yellow-50 transition-colors w-full"
                   >
                     <Trash2 className="mr-4 h-5 w-5 text-yellow-500" />
                     <span>Trash</span>
-                  </a>
+                  </button>
                 </li>
               </ul>
             </nav>
