@@ -30,7 +30,7 @@ Navigate to `apps/frontend`. Initialize a new Next.js application using `pnpm cr
 
 ---
 
-## Commit 3: feat: Setup Hono Backend
+## Commit 3: feat: Setup Hono Backend ✅ 01725402744557e282c8d85ff32d4be76f2b495d
 **Description:**
 Navigate to `packages/backend`. Initialize a new Node.js project using `pnpm init`. Install `hono` and `typescript`, `@types/node`, `tsx` as dependencies. Create a `src/index.ts` file. Implement a basic "Hello World" Hono application listening on port 3001. Add a `dev` script to `packages/backend/package.json` using `tsx watch src/index.ts`. Create a `tsconfig.json` using `pnpm dlx typescript tsc --init`.
 

@@ -12,6 +12,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
+    "@hono/node-server": "^1.14.2",
     "@types/node": "^20.17.50",
     "hono": "^4.7.10",
     "tsx": "^4.19.4",
