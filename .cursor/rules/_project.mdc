@@ -1,0 +1,83 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# workshop-2025-05-22 - Project Rules
+
+## 1. Project Overview
+
+goal: [Information not found in project context]
+type: Monorepo (Web Application and Backend API)
+key features:
+- Frontend application (Next.js)
+- Backend API (Hono)
+- [Information not found in project context]
+
+## 2. Technology Stack
+
+language(s): TypeScript (frontend: ^5, backend: ^5.8.3)
+framework(s): Next.js 15.3.2 (App Router - from frontend package.json, tsconfig.json), Hono ^4.7.10 (backend package.json)
+ui library/styling: Tailwind CSS v4 (frontend package.json, postcss.config.mjs)
+database(s): [Information not found in project context]
+state management: [Information not found in project context - likely React Context or local state for Next.js]
+api layer: REST (Next.js API Routes implied, Hono for backend)
+key libraries:
+- frontend: `react` ^19.0.0, `react-dom` ^19.0.0
+- backend: `@hono/node-server` ^1.14.2
+
+## 3. Project Structure
+
+main source directory: `apps/` (for applications), `packages/` (for shared packages/libraries)
+core directories:
+- apps/frontend/src/app/: Next.js app router components
+- apps/frontend/src/components/: [Assumed for Reusable UI elements - verify if present]
+- apps/frontend/public/: Static assets for frontend
+- packages/backend/src/: Backend source files
+- docs/: Project documentation
+- tests/ or __tests__/: [N/A - No global test directory found, "test" script in root package.json is a placeholder]
+diagram/link: [N/A]
+
+## 4. Coding Standards & Conventions
+
+language usage: Strict TypeScript mode (frontend tsconfig.json `strict: true`, backend tsconfig.json `strict: true`)
+naming conventions:
+- files/folders: [Observe project files - appears to be kebab-case for configs, PascalCase for Next.js components if following conventions]
+- components: [PascalCase (React/Next.js convention)]
+- variables/functions: [camelCase (common TypeScript convention)]
+- types/interfaces: [PascalCase (common TypeScript convention)]
+code style/formatting: ESLint (frontend `eslint.config.mjs` uses `next/core-web-vitals`, `next/typescript`)
+comments: [Information not found in project context]
+imports: Absolute paths (`@/*` in frontend `tsconfig.json`)
+
+## 5. Key Principles & Best Practices
+
+[No explicit principles documented]
+
+## 6. Testing
+
+framework: [N/A - "test" script in root package.json is `echo "Error: no test specified" && exit 1`, same for backend. Frontend has `next lint` but no explicit test framework.]
+types: [N/A]
+location: [N/A]
+coverage expectations: [N/A]
+
+## 7. Tooling & Workflow
+
+package manager: pnpm@10.11.0 (root `package.json`, backend `package.json`)
+build command(s): `pnpm --filter frontend build` (from root `package.json` implies this, frontend `package.json` has `next build`)
+run command(s) (dev): `pnpm dev` (root `package.json`), `pnpm dev:frontend` (`next dev`), `pnpm dev:backend` (`tsx watch src/index.ts`)
+version control: Git
+ci/cd: [Information not found in project context]
+ide recommendations: [N/A]
+
+## 8. (Optional) Database / API Guidelines
+
+[N/A]
+
+## 9. (Optional) Specific Feature Rules
+
+[N/A]
+
+## 10. (Optional) Rule Referencing
+
+[N/A]
