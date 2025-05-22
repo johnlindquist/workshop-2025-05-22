@@ -1,93 +1,213 @@
+'use client'
+
+import { useState } from 'react'
+import {
+  Share2,
+  Edit3,
+  Trash2,
+  Calendar,
+  Tag,
+  ExternalLink,
+  Copy,
+} from 'lucide-react'
+import { Task, taskUtils } from '@/lib/api'
+
 interface NoteCardProps {
-  title: string
-  content: string
-  color?: string
-  textColor?: string
+  task: Task
+  onEdit?: (task: Task) => void
+  onDelete?: (id: string) => void
+  onShare?: (id: string) => Promise<string | null>
+  onUnshare?: (id: string) => Promise<boolean>
 }
 
 export default function NoteCard({
-  title,
-  content,
-  color = 'bg-white',
-  textColor = 'text-slate-700',
+  task,
+  onEdit,
+  onDelete,
+  onShare,
+  onUnshare,
 }: NoteCardProps) {
+  const [isSharing, setIsSharing] = useState(false)
+  const [shareUrl, setShareUrl] = useState<string | null>(
+    task.shareId ? taskUtils.generateShareUrl(task.shareId) : null,
+  )
+
+  const color = taskUtils.getTaskColor(task)
+  const textColor = 'text-white'
+  const isOverdue = task.isOverdue
+
+  const handleShare = async () => {
+    if (!onShare) return
+
+    setIsSharing(true)
+    try {
+      if (task.isPublic && task.shareId) {
+        // Task is already shared, copy URL
+        const url = taskUtils.generateShareUrl(task.shareId)
+        await navigator.clipboard.writeText(url)
+        // You could show a toast notification here
+      } else {
+        // Share the task
+        const url = await onShare(task.id)
+        if (url) {
+          setShareUrl(url)
+          await navigator.clipboard.writeText(url)
+          // You could show a toast notification here
+        }
+      }
+    } catch (error) {
+      console.error('Failed to share task:', error)
+    } finally {
+      setIsSharing(false)
+    }
+  }
+
+  const handleUnshare = async () => {
+    if (!onUnshare) return
+
+    try {
+      const success = await onUnshare(task.id)
+      if (success) {
+        setShareUrl(null)
+      }
+    } catch (error) {
+      console.error('Failed to unshare task:', error)
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
   return (
     <div
-      className={`rounded-3xl ${color} p-5 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 shadow-lg`}
+      className={`rounded-3xl ${color} p-5 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 shadow-lg ${
+        isOverdue ? 'ring-2 ring-red-500 ring-opacity-50' : ''
+      }`}
     >
+      {/* Header */}
       <div className="flex justify-between items-start mb-3">
-        <h3 className={`text-xl font-bold ${textColor}`}>{title}</h3>
-        <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={textColor}
-            role="img"
-            aria-label="More options"
-          >
-            <circle cx="12" cy="12" r="1" />
-            <circle cx="19" cy="12" r="1" />
-            <circle cx="5" cy="12" r="1" />
-          </svg>
+        <div className="flex-1">
+          <h3 className={`text-xl font-bold ${textColor} mb-1`}>
+            {task.title}
+          </h3>
+          {isOverdue && task.dueDate && (
+            <div className="flex items-center text-red-100 text-sm">
+              <Calendar className="w-3 h-3 mr-1" />
+              <span>{taskUtils.formatDueDate(task.dueDate)}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Status indicators */}
+        <div className="flex items-center space-x-1">
+          {task.isPublic && (
+            <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm">
+              <Share2 className="w-3 h-3 text-white" />
+            </div>
+          )}
+          {isOverdue && (
+            <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">!</span>
+            </div>
+          )}
         </div>
       </div>
-      <p className={`${textColor} opacity-90`}>{content}</p>
 
-      <div className="mt-4 pt-3 border-t border-white/30 flex justify-between">
+      {/* Content */}
+      {task.content && (
+        <p className={`${textColor} opacity-90 mb-3`}>{task.content}</p>
+      )}
+
+      {/* Tags */}
+      {task.tags && task.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-3">
+          {task.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-white/20 text-white"
+            >
+              <Tag className="w-2 h-2 mr-1" />
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Due date (if not overdue) */}
+      {task.dueDate && !isOverdue && (
+        <div className="flex items-center text-white/80 text-sm mb-3">
+          <Calendar className="w-3 h-3 mr-1" />
+          <span>Due {taskUtils.formatDueDate(task.dueDate)}</span>
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="mt-4 pt-3 border-t border-white/30 flex justify-between items-center">
         <div className="flex space-x-2">
+          {/* Edit button */}
           <button
             type="button"
-            className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm"
+            onClick={() => onEdit?.(task)}
+            className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm hover:bg-white/40 transition-colors"
+            title="Edit task"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={textColor}
-              role="img"
-              aria-label="Edit note"
-            >
-              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-            </svg>
+            <Edit3 className="w-4 h-4 text-white" />
           </button>
+
+          {/* Share/Unshare button */}
           <button
             type="button"
-            className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm"
+            onClick={task.isPublic ? handleUnshare : handleShare}
+            disabled={isSharing}
+            className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm hover:bg-white/40 transition-colors disabled:opacity-50"
+            title={task.isPublic ? 'Unshare task' : 'Share task'}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={textColor}
-              role="img"
-              aria-label="Add image"
+            {isSharing ? (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : task.isPublic ? (
+              <ExternalLink className="w-4 h-4 text-white" />
+            ) : (
+              <Share2 className="w-4 h-4 text-white" />
+            )}
+          </button>
+
+          {/* Copy share URL button (only if shared) */}
+          {task.isPublic && task.shareId && (
+            <button
+              type="button"
+              onClick={() => {
+                const url = taskUtils.generateShareUrl(task.shareId!)
+                navigator.clipboard.writeText(url)
+              }}
+              className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm hover:bg-white/40 transition-colors"
+              title="Copy share URL"
             >
-              <rect width="18" height="18" x="3" y="3" rx="8" />
-              <circle cx="9" cy="9" r="2" />
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-            </svg>
+              <Copy className="w-4 h-4 text-white" />
+            </button>
+          )}
+
+          {/* Delete button */}
+          <button
+            type="button"
+            onClick={() => onDelete?.(task.id)}
+            className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center backdrop-blur-sm hover:bg-red-400/40 transition-colors"
+            title="Delete task"
+          >
+            <Trash2 className="w-4 h-4 text-white" />
           </button>
         </div>
-        <span className={`text-xs ${textColor} opacity-70`}>Just now</span>
+
+        {/* Timestamp */}
+        <span className={`text-xs ${textColor} opacity-70`}>
+          {formatDate(task.updatedAt)}
+        </span>
       </div>
     </div>
   )
