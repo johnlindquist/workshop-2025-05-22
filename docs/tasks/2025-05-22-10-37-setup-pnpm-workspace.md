@@ -1,6 +1,6 @@
 # Task: Setup PNPM Workspace with Next.js Frontend and Hono Backend
 
-## Commit 1: feat: Initialize PNPM Workspace and Basic Project Structure
+## Commit 1: feat: Initialize PNPM Workspace and Basic Project Structure ✅ d63c665fe035541dda60a78d4d90aa33647fe5f1
 **Description:**
 Initialize a new pnpm workspace. Create a `pnpm-workspace.yaml` file to define the workspace packages. Create `apps/frontend` and `packages/backend` directories. This commit establishes the foundational monorepo structure.
 
