@@ -1,6 +1,6 @@
 # Task: Migrate to Biome for Linting and Formatting
 
-## Commit 1: feat: Remove existing linting/formatting packages and configurations
+## Commit 1: feat: Remove existing linting/formatting packages and configurations ✅ 1b3931daea80f98e046ce99cfb1d27625bf0e1bc
 **Description:**
 This commit will remove all existing linting and formatting related devDependencies from the root `package.json` and any workspace `package.json` files (e.g., `apps/frontend/package.json`, `packages/backend/package.json`). It will also delete any configuration files associated with these tools (e.g., `.eslintrc.js`, `.prettierrc.json`, `eslint.config.mjs`, `postcss.config.mjs` if it's only for linting/formatting and not essential for Tailwind CSS build).
 
