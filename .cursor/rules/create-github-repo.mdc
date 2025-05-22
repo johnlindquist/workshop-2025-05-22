@@ -1,0 +1,46 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Create GitHub Repository and Protect Main Branch
+
+This rule outlines the steps to initialize a new public GitHub repository for the current project using the GitHub CLI (`gh`) and then protect the `main` branch to enforce pull request reviews before merging.
+
+## Steps:
+
+1.  **Initialize a Git Repository (if not already done):**
+    *   Run `git init` in the project root.
+    *   Create an initial commit (e.g., `git add . && git commit -m "feat: initial commit"`).
+
+2.  **Create Public Repository on GitHub:**
+    *   Use the command: `gh repo create {{REPO_NAME}} --public --source=. --remote=origin`
+        *   Replace `{{REPO_NAME}}` with the desired repository name (e.g., the project directory name).
+        *   This command creates a new public repository on your GitHub account, sets the current directory as the source, and adds a remote named `origin`.
+
+3.  **Push Initial Commit to `main` Branch:**
+    *   Run `git push -u origin main` (or `master` if that's your default branch name, though `main` is preferred).
+
+4.  **Protect the `main` Branch:**
+    *   Use the GitHub CLI to update branch protection rules. The exact command can be more complex depending on the desired level of protection. A basic protection requiring pull request reviews before merging and status checks to pass before merging can be set up via the GitHub UI or more specific `gh api` calls.
+    *   For CLI-based protection, you might need to construct a `gh api` call. For example, to require pull request reviews and status checks:
+        ```bash
+        gh api \
+          --method PUT \
+          -H "Accept: application/vnd.github.v3+json" \
+          /repos/{{OWNER}}/{{REPO_NAME}}/branches/main/protection \
+          -f required_status_checks=null \
+          -f enforce_admins=null \
+          -F required_pull_request_reviews[dismiss_stale_reviews]=false \
+          -F required_pull_request_reviews[require_code_owner_reviews]=false \
+          -F required_pull_request_reviews[required_approving_review_count]=1 \
+          -F restrictions=null
+        ```
+        *   Replace `{{OWNER}}` with your GitHub username or organization name.
+        *   Replace `{{REPO_NAME}}` with the repository name.
+        *   This example requires at least one approving review. Adjust parameters as needed for more specific rules (e.g., requiring specific status checks to pass).
+
+5.  **Verify:**
+    *   Check the repository settings on GitHub to confirm the `main` branch is protected as expected.
+
+This ensures that all changes to the `main` branch must go through a pull request process, enhancing code quality and collaboration.
