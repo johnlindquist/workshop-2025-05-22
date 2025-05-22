@@ -159,7 +159,7 @@ describe('UI Components Integration', () => {
       render(<NoteCard {...defaultProps} />)
 
       const buttons = screen.getAllByRole('button')
-      expect(buttons).toHaveLength(3) // More options + Edit + Add image buttons
+      expect(buttons).toHaveLength(2) // Edit + Add image buttons
     })
 
     it('should handle button clicks', () => {
