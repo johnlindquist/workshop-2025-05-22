@@ -1,0 +1,614 @@
+openapi: 3.0.3
+info:
+  title: Cosmo Notes API
+  version: 1.0.0
+  description: API for managing tasks and notes in a Google Keep competitor application. Provides functionality for creating, editing, deleting, and sharing tasks with due dates, tags, and notifications.
+  contact:
+    name: Cosmo Notes API Team
+    email: api@cosmonotes.com
+  license:
+    name: ISC
+    url: https://opensource.org/licenses/ISC
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Development Server
+  - url: https://api.cosmonotes.com/v1
+    description: Production Server
+
+security:
+  - apiKeyAuth: []
+
+tags:
+  - name: Tasks
+    description: Operations related to task management including creation, editing, deletion, and sharing
+  - name: Tags
+    description: Operations for managing task tags and categories
+  - name: Notifications
+    description: Operations for handling overdue task notifications
+  - name: Sharing
+    description: Operations for sharing tasks publicly
+
+paths:
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Get all tasks
+      description: Retrieve all tasks for the authenticated user
+      parameters:
+        - name: tag
+          in: query
+          description: Filter tasks by tag
+          required: false
+          schema:
+            type: string
+        - name: overdue
+          in: query
+          description: Filter to show only overdue tasks
+          required: false
+          schema:
+            type: boolean
+        - name: public
+          in: query
+          description: Filter to show only public tasks
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      description: Create a new task with optional due date and tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}:
+    get:
+      tags:
+        - Tasks
+      summary: Get a specific task
+      description: Retrieve a specific task by ID
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier for the task
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - Tasks
+      summary: Update a task
+      description: Update an existing task's content, due date, tags, or sharing status
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier for the task
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Tasks
+      summary: Delete a task
+      description: Delete a specific task by ID
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier for the task
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Task deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}/share:
+    post:
+      tags:
+        - Sharing
+      summary: Make a task public
+      description: Make a task publicly shareable and generate a share URL
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier for the task
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task made public successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Sharing
+      summary: Make a task private
+      description: Remove public sharing from a task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier for the task
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Task made private successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/public/{shareId}:
+    get:
+      tags:
+        - Sharing
+      summary: Get a public task
+      description: Retrieve a publicly shared task without authentication
+      security: []
+      parameters:
+        - name: shareId
+          in: path
+          required: true
+          description: Public share identifier for the task
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Public task retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicTask'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tags:
+    get:
+      tags:
+        - Tags
+      summary: Get all tags
+      description: Retrieve all tags used by the authenticated user
+      responses:
+        '200':
+          description: List of tags retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/overdue:
+    get:
+      tags:
+        - Notifications
+      summary: Get overdue task notifications
+      description: Retrieve notifications for overdue tasks
+      responses:
+        '200':
+          description: Overdue notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OverdueNotification'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Notifications
+      summary: Send overdue notifications
+      description: Trigger sending of overdue task notifications
+      responses:
+        '200':
+          description: Notifications sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key for authentication
+
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the task
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          description: Title of the task
+          example: "Buy groceries"
+        content:
+          type: string
+          description: Detailed content of the task
+          example: "Need to buy milk, bread, and eggs from the store"
+        dueDate:
+          type: string
+          format: date-time
+          description: Due date and time for the task
+          example: "2024-01-15T10:00:00Z"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the task
+          example: ["shopping", "urgent"]
+        isPublic:
+          type: boolean
+          description: Whether the task is publicly shareable
+          example: false
+        isOverdue:
+          type: boolean
+          description: Whether the task is overdue
+          example: false
+        shareId:
+          type: string
+          description: Public share identifier (only present if task is public)
+          example: "abc123def456"
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the task was created
+          example: "2024-01-01T12:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the task was last updated
+          example: "2024-01-02T14:30:00Z"
+      required:
+        - id
+        - title
+        - isPublic
+        - isOverdue
+        - createdAt
+        - updatedAt
+
+    CreateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the task
+          example: "Buy groceries"
+        content:
+          type: string
+          description: Detailed content of the task
+          example: "Need to buy milk, bread, and eggs from the store"
+        dueDate:
+          type: string
+          format: date-time
+          description: Due date and time for the task
+          example: "2024-01-15T10:00:00Z"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags to associate with the task
+          example: ["shopping", "urgent"]
+      required:
+        - title
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the task
+          example: "Buy groceries"
+        content:
+          type: string
+          description: Detailed content of the task
+          example: "Need to buy milk, bread, and eggs from the store"
+        dueDate:
+          type: string
+          format: date-time
+          description: Due date and time for the task
+          example: "2024-01-15T10:00:00Z"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags to associate with the task
+          example: ["shopping", "urgent"]
+        isPublic:
+          type: boolean
+          description: Whether the task should be publicly shareable
+          example: false
+
+    PublicTask:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the task
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          description: Title of the task
+          example: "Buy groceries"
+        content:
+          type: string
+          description: Detailed content of the task
+          example: "Need to buy milk, bread, and eggs from the store"
+        dueDate:
+          type: string
+          format: date-time
+          description: Due date and time for the task
+          example: "2024-01-15T10:00:00Z"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the task
+          example: ["shopping", "urgent"]
+        isOverdue:
+          type: boolean
+          description: Whether the task is overdue
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the task was created
+          example: "2024-01-01T12:00:00Z"
+      required:
+        - id
+        - title
+        - isOverdue
+        - createdAt
+
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the tag
+          example: "shopping"
+        count:
+          type: integer
+          description: Number of tasks using this tag
+          example: 5
+      required:
+        - name
+        - count
+
+    ShareResponse:
+      type: object
+      properties:
+        shareId:
+          type: string
+          description: Public share identifier for the task
+          example: "abc123def456"
+        shareUrl:
+          type: string
+          format: uri
+          description: Public URL for accessing the shared task
+          example: "https://cosmonotes.com/shared/abc123def456"
+      required:
+        - shareId
+        - shareUrl
+
+    OverdueNotification:
+      type: object
+      properties:
+        taskId:
+          type: string
+          format: uuid
+          description: Unique identifier for the overdue task
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          description: Title of the overdue task
+          example: "Buy groceries"
+        dueDate:
+          type: string
+          format: date-time
+          description: Original due date of the task
+          example: "2024-01-15T10:00:00Z"
+        daysPastDue:
+          type: integer
+          description: Number of days the task is overdue
+          example: 3
+      required:
+        - taskId
+        - title
+        - dueDate
+        - daysPastDue
+
+    NotificationResponse:
+      type: object
+      properties:
+        notificationsSent:
+          type: integer
+          description: Number of notifications sent
+          example: 5
+        overdueTasksCount:
+          type: integer
+          description: Total number of overdue tasks
+          example: 8
+      required:
+        - notificationsSent
+        - overdueTasksCount
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Task not found"
+        code:
+          type: string
+          description: Error code
+          example: "TASK_NOT_FOUND"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the error occurred
+          example: "2024-01-01T12:00:00Z"
+      required:
+        - error
+        - code
+        - timestamp
+
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Invalid input data"
+            code: "BAD_REQUEST"
+            timestamp: "2024-01-01T12:00:00Z"
+
+    UnauthorizedError:
+      description: Unauthorized - invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Invalid or missing API key"
+            code: "UNAUTHORIZED"
+            timestamp: "2024-01-01T12:00:00Z"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Task not found"
+            code: "TASK_NOT_FOUND"
+            timestamp: "2024-01-01T12:00:00Z"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Internal server error"
+            code: "INTERNAL_ERROR"
+            timestamp: "2024-01-01T12:00:00Z" 
