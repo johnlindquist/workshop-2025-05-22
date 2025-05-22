@@ -76,7 +76,7 @@ The `biome.json` will be configured as follows:
 
 ---
 
-## Commit 3: chore: Update package.json scripts and apply Biome fixes
+## Commit 3: chore: Update package.json scripts and apply Biome fixes ✅ 4f7f9b83a779fb1d32e0ed9ca77d4dce8eaa50e2
 **Description:**
 This commit will update the `scripts` section in the root `package.json` and any relevant workspace `package.json` files to use Biome.
 Replace old linting/formatting scripts (e.g., `lint`, `format`) with new Biome commands.
