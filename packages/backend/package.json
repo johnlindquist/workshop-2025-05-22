@@ -12,10 +12,13 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
+    "@cloudflare/d1": "^1.4.1",
+    "@cloudflare/workers-types": "^4.20250522.0",
     "@hono/node-server": "^1.14.2",
     "@types/node": "^20.17.50",
     "hono": "^4.7.10",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "wrangler": "^4.16.1"
   }
 }

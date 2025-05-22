@@ -1,0 +1,14 @@
+name = "workshop-2025-05-22-backend"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[env.development]
+vars = { LOG_LEVEL = "debug" }
+
+[env.production]
+vars = { LOG_LEVEL = "info" }
+
+[[d1_databases]]
+binding = "DB"
+database_name = "workshop-2025-05-22"
+database_id = "10d45eeb-7a6f-45b6-b734-c5e1ab461c17" 
