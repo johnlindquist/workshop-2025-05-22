@@ -166,10 +166,10 @@ describe('UI Components Integration', () => {
       render(<NoteCard {...defaultProps} />)
 
       const buttons = screen.getAllByRole('button')
-      buttons.forEach((button) => {
+      for (const button of buttons) {
         fireEvent.click(button)
         // Should not throw errors
-      })
+      }
     })
 
     it('should display timestamp', () => {
@@ -198,9 +198,9 @@ describe('UI Components Integration', () => {
       render(<NoteCard title="Test" content="Content" />)
 
       const buttons = screen.getAllByRole('button')
-      buttons.forEach((button) => {
+      for (const button of buttons) {
         expect(button).toHaveAttribute('type', 'button')
-      })
+      }
     })
 
     it('should support keyboard navigation', () => {

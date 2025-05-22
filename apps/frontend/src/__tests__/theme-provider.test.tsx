@@ -76,7 +76,11 @@ describe('ThemeProvider Integration', () => {
       return (
         <div>
           <div data-testid="current-theme">{theme}</div>
-          <button onClick={() => setTheme('light')} data-testid="theme-toggle">
+          <button
+            type="button"
+            onClick={() => setTheme('light')}
+            data-testid="theme-toggle"
+          >
             Switch to Light
           </button>
         </div>
