@@ -154,3 +154,4 @@ i18n/
 .blitz-build/
 .blitz/
 tmp/
+packages/backend/.wrangler/

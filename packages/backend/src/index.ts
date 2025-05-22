@@ -4,6 +4,8 @@ import { cors } from 'hono/cors'
 import { databaseMiddleware } from './middleware/database'
 import { loggingMiddleware } from './middleware/logging'
 import { tasks } from './routes/tasks'
+import { sharing } from './routes/sharing'
+import { notifications } from './routes/notifications'
 import { Env } from './db/connection'
 
 const app = new Hono<{ Bindings: Env }>()
@@ -33,6 +35,9 @@ app.get('/', (c) => {
 
 // API routes
 app.route('/api/v1/tasks', tasks)
+app.route('/api/v1/tasks', sharing)
+app.route('/api/v1/notifications', notifications)
+app.route('/api/v1', sharing) // For /api/v1/shared/:shareId endpoint
 
 // 404 handler
 app.notFound((c) => {
