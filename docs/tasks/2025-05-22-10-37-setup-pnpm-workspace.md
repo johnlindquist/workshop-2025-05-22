@@ -15,7 +15,7 @@ Initialize a new pnpm workspace. Create a `pnpm-workspace.yaml` file to define t
 
 ---
 
-## Commit 2: feat: Setup Next.js Frontend with Tailwind CSS
+## Commit 2: feat: Setup Next.js Frontend with Tailwind CSS ✅ 271590ff19c097172fcda3ecab479bb4d3797b9a
 **Description:**
 Navigate to `apps/frontend`. Initialize a new Next.js application using `pnpm create next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias="@/*"`. Ensure a basic "Hello World" page is functional at the root. Add `pnpm dev` script to `apps/frontend/package.json`.
 
