@@ -7,77 +7,153 @@ alwaysApply: true
 
 ## 1. Project Overview
 
-goal: [Information not found in project context]
+goal: Build a Google Keep competitor with task management features
 type: Monorepo (Web Application and Backend API)
 key features:
-- Frontend application (Next.js)
-- Backend API (Hono)
-- [Information not found in project context]
+- Track tasks with due dates and tags
+- Share tasks publicly
+- Highlight overdue tasks (turn red after due date)
+- Send notifications for overdue tasks
+- Modern note-taking interface with colorful cards
+- Dark/light theme support
 
 ## 2. Technology Stack
 
 language(s): TypeScript (frontend: ^5, backend: ^5.8.3)
-framework(s): Next.js 15.3.2 (App Router - from frontend package.json, tsconfig.json), Hono ^4.7.10 (backend package.json)
-ui library/styling: Tailwind CSS v4 (frontend package.json, postcss.config.mjs)
-database(s): [Information not found in project context]
-state management: [Information not found in project context - likely React Context or local state for Next.js]
-api layer: REST (Next.js API Routes implied, Hono for backend)
+framework(s): Next.js 15.3.2 (App Router), Hono ^4.7.10 (backend)
+ui library/styling: 
+- Tailwind CSS v4 with custom design system
+- shadcn/ui components (@radix-ui/react-slot, class-variance-authority)
+- next-themes for theme switching
+- Lucide React icons
+- Custom gradient backgrounds and glassmorphism effects
+database(s): SQLite (simple database for MVP, no complex DB engineering)
+state management: React Context and local state (Next.js patterns)
+api layer: REST (Next.js API Routes, Hono backend)
 key libraries:
-- frontend: `react` ^19.0.0, `react-dom` ^19.0.0
-- backend: `@hono/node-server` ^1.14.2
+- frontend: `react` ^19.0.0, `react-dom` ^19.0.0, `next-themes` ^0.4.4, `tailwind-merge` ^3.3.0
+- backend: `@hono/node-server` ^1.14.2, `tsx` ^4.19.4
+- testing: Jest ^29.7.0, @testing-library/react ^14.1.2, @testing-library/jest-dom ^6.1.5
 
 ## 3. Project Structure
 
-main source directory: `apps/` (for applications), `packages/` (for shared packages/libraries)
+main source directory: `apps/` (applications), `packages/` (shared packages)
 core directories:
-- apps/frontend/src/app/: Next.js app router components
-- apps/frontend/src/components/: [Assumed for Reusable UI elements - verify if present]
-- apps/frontend/public/: Static assets for frontend
-- packages/backend/src/: Backend source files
-- docs/: Project documentation
-- tests/ or __tests__/: [N/A - No global test directory found, "test" script in root package.json is a placeholder]
-diagram/link: [N/A]
+- apps/frontend/src/app/: Next.js app router pages and layouts
+- apps/frontend/src/components/: Reusable UI components (note-card, sidebar, top-bar, mobile-sidebar)
+- apps/frontend/src/components/ui/: shadcn/ui base components (button, card, input)
+- apps/frontend/src/__tests__/: Jest test files with component integration tests
+- apps/frontend/src/lib/: Utility functions and configurations
+- apps/frontend/public/: Static assets
+- packages/backend/src/: Hono backend source files
+- docs/: Project documentation (PRD.md, task execution logs)
+- docs/tasks/: Detailed task execution documentation with commit history
 
 ## 4. Coding Standards & Conventions
 
-language usage: Strict TypeScript mode (frontend tsconfig.json `strict: true`, backend tsconfig.json `strict: true`)
+language usage: Strict TypeScript mode (both frontend and backend `strict: true`)
 naming conventions:
-- files/folders: [Observe project files - appears to be kebab-case for configs, PascalCase for Next.js components if following conventions]
-- components: [PascalCase (React/Next.js convention)]
-- variables/functions: [camelCase (common TypeScript convention)]
-- types/interfaces: [PascalCase (common TypeScript convention)]
-code style/formatting: ESLint (frontend `eslint.config.mjs` uses `next/core-web-vitals`, `next/typescript`)
-comments: [Information not found in project context]
-imports: Absolute paths (`@/*` in frontend `tsconfig.json`)
+- files/folders: kebab-case for configs, PascalCase for React components
+- components: PascalCase (React/Next.js convention)
+- variables/functions: camelCase (TypeScript convention)
+- types/interfaces: PascalCase (TypeScript convention)
+code style/formatting: Biome (replaces ESLint/Prettier)
+- Single quotes for JS, double quotes for JSX
+- 2-space indentation
+- Semicolons as needed
+- Organized imports enabled
+comments: JSDoc for component props, inline comments for complex logic
+imports: Absolute paths (`@/*` maps to `src/*`)
 
 ## 5. Key Principles & Best Practices
 
-[No explicit principles documented]
+- **UI/UX Focus**: Modern glassmorphism design with colorful gradients
+- **Accessibility**: Proper ARIA labels, semantic HTML, keyboard navigation
+- **Component Architecture**: Reusable components with TypeScript interfaces
+- **Theme Support**: Light/dark mode with next-themes integration
+- **Testing**: Component integration tests with Jest and Testing Library
+- **Performance**: Next.js optimizations, proper image handling
+- **Responsive Design**: Mobile-first approach with Tailwind breakpoints
 
 ## 6. Testing
 
-framework: [N/A - "test" script in root package.json is `echo "Error: no test specified" && exit 1`, same for backend. Frontend has `next lint` but no explicit test framework.]
-types: [N/A]
-location: [N/A]
-coverage expectations: [N/A]
+framework: Jest ^29.7.0 with jsdom environment
+types: Component integration tests, theme provider tests, accessibility tests
+location: `apps/frontend/src/__tests__/` directory
+coverage expectations: Component rendering, user interactions, theme switching, accessibility
+test patterns:
+- Component prop validation
+- User event simulation
+- Theme context testing
+- ARIA compliance verification
+commands:
+- `pnpm --filter frontend test`: Run tests
+- `pnpm --filter frontend test:watch`: Watch mode
+- `pnpm --filter frontend test:coverage`: Coverage report
 
 ## 7. Tooling & Workflow
 
-package manager: pnpm@10.11.0 (root `package.json`, backend `package.json`)
-build command(s): `pnpm --filter frontend build` (from root `package.json` implies this, frontend `package.json` has `next build`)
-run command(s) (dev): `pnpm dev` (root `package.json`), `pnpm dev:frontend` (`next dev`), `pnpm dev:backend` (`tsx watch src/index.ts`)
-version control: Git
-ci/cd: [Information not found in project context]
-ide recommendations: [N/A]
+package manager: pnpm@10.11.0 (workspace configuration)
+build command(s): 
+- `pnpm --filter frontend build`: Frontend production build
+- `pnpm --filter backend build`: Backend build (if configured)
+run command(s) (dev): 
+- `pnpm dev`: Run all services in parallel
+- `pnpm dev:frontend`: Next.js development server
+- `pnpm dev:backend`: Hono server with tsx watch
+linting/formatting:
+- `pnpm lint`: Biome linting across workspace
+- `pnpm format`: Biome formatting
+- `pnpm check`: Biome check and fix
+version control: Git with conventional commits (feat:, fix:, chore:)
+ci/cd: Not configured yet
+ide recommendations: VSCode with Biome extension
 
-## 8. (Optional) Database / API Guidelines
+## 8. Database / API Guidelines
 
-[N/A]
+database: SQLite for simplicity (team lacks dedicated DB engineers)
+api patterns: RESTful endpoints, JSON responses
+data models: Tasks with properties (title, content, dueDate, tags, isPublic, isOverdue)
+backend framework: Hono with Node.js server
+api structure: Standard CRUD operations for task management
 
-## 9. (Optional) Specific Feature Rules
+## 9. Specific Feature Rules
 
-[N/A]
+**Note/Task Management:**
+- Focus input on page load for quick task creation
+- Enter key creates new task
+- Color-coded cards with gradients (cyan, pink, yellow themes)
+- Hover effects with subtle animations and shadows
 
-## 10. (Optional) Rule Referencing
+**UI Components:**
+- NoteCard: Supports custom colors, content, and action buttons
+- Sidebar: Navigation with categories (Notes, Reminders, Inspiration, etc.)
+- TopBar: Search and user controls
+- Theme switching via next-themes provider
 
-[N/A]
+**Responsive Design:**
+- Mobile-first approach
+- Collapsible sidebar for mobile (mobile-sidebar component)
+- Grid layout adapts to screen size (1-3 columns)
+
+**Accessibility:**
+- Proper ARIA labels on all interactive elements
+- Semantic HTML structure
+- Keyboard navigation support
+- Screen reader compatibility
+
+## 10. Recent Implementation Notes
+
+**Last Task (2025-05-22-12-34):** Fixed ThemeProvider integration
+- Added missing theme-provider component with next-themes
+- Created shadcn/ui component structure (button, card, input)
+- Implemented comprehensive Jest testing suite
+- Fixed import paths and TypeScript configuration
+- Added theme switching functionality with proper context
+
+**Current UI State:** 
+- Cosmo Notes interface with glassmorphism design
+- Three sample note cards with gradient backgrounds
+- Functional search input with action buttons
+- Sidebar navigation with category icons
+- Responsive layout with mobile support
