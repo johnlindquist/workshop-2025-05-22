@@ -1,6 +1,6 @@
 # Task: Implement Task CRUD API Endpoints in Backend (Hono)
 
-## Commit 1: feat: scaffold Hono routes and controller structure for tasks
+## Commit 1: feat: scaffold Hono routes and controller structure for tasks ✅ cc67b7c
 **Description:**
 - Create `packages/backend/src/routes/tasks.ts` for all task-related endpoints as per OpenAPI spec.
 - Create `packages/backend/src/services/taskService.ts` for business logic.
@@ -24,7 +24,7 @@
 
 ---
 
-## Commit 2: feat: implement SQLite task model and persistence logic
+## Commit 2: feat: implement SQLite task model and persistence logic ✅ 07e04f4
 **Description:**
 - Create `packages/backend/src/db/models/taskModel.ts` for SQLite schema and queries.
 - Implement CRUD operations in `taskService.ts` using SQLite.
@@ -60,7 +60,7 @@
 
 ---
 
-## Commit 4: test: comprehensive integration tests for all task endpoints
+## Commit 4: test: comprehensive integration tests for all task endpoints ✅ 9523fc5
 **Description:**
 - Create `packages/backend/src/routes/__tests__/tasks.route.test.ts` for endpoint integration tests (using supertest or similar).
 - Test all CRUD, sharing, and overdue flows, including error cases (400, 404, 401).

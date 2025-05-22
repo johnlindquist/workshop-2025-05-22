@@ -1,4 +1,4 @@
-import process from 'process';
+import process from 'node:process';
 
 const LOG_LEVELS = ['debug', 'info', 'error'] as const;
 type LogLevel = typeof LOG_LEVELS[number];
@@ -17,19 +17,19 @@ const shouldLog = (level: LogLevel): boolean => {
 };
 
 export const logger = {
-    info: (msg: string, meta?: Record<string, any>) => {
+    info: (msg: string, meta?: Record<string, unknown>) => {
         if (shouldLog('info')) {
-            console.info(`INFO: ${msg}` + (meta ? ' ' + JSON.stringify(meta) : ''));
+            console.info(`INFO: ${msg}${meta ? ` ${JSON.stringify(meta)}` : ''}`);
         }
     },
-    debug: (msg: string, meta?: Record<string, any>) => {
+    debug: (msg: string, meta?: Record<string, unknown>) => {
         if (shouldLog('debug')) {
-            console.debug(`DEBUG: ${msg}` + (meta ? ' ' + JSON.stringify(meta) : ''));
+            console.debug(`DEBUG: ${msg}${meta ? ` ${JSON.stringify(meta)}` : ''}`);
         }
     },
-    error: (msg: string, meta?: Record<string, any>) => {
+    error: (msg: string, meta?: Record<string, unknown>) => {
         if (shouldLog('error')) {
-            console.error(`ERROR: ${msg}` + (meta ? ' ' + JSON.stringify(meta) : ''));
+            console.error(`ERROR: ${msg}${meta ? ` ${JSON.stringify(meta)}` : ''}`);
         }
     },
 }; 

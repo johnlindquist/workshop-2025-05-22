@@ -1,4 +1,4 @@
-import { DatabaseConnection } from '../connection';
+import type { DatabaseConnection } from '../connection';
 import { logger } from '../../lib/logger';
 
 // TypeScript interfaces matching OpenAPI Task schema
@@ -72,7 +72,7 @@ export class TaskModel {
 
     // Generate UUID v4
     private generateId(): string {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             const r = Math.random() * 16 | 0;
             const v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
@@ -133,7 +133,7 @@ export class TaskModel {
         userId?: string;
     }): Promise<Task[]> {
         let query = 'SELECT * FROM tasks WHERE 1=1';
-        const params: any[] = [];
+        const params: unknown[] = [];
 
         if (filters?.userId) {
             query += ' AND userId = ?';
@@ -168,7 +168,7 @@ export class TaskModel {
         }
 
         const updates: string[] = [];
-        const params: any[] = [];
+        const params: unknown[] = [];
 
         if (data.title !== undefined) {
             updates.push('title = ?');
@@ -269,7 +269,7 @@ export class TaskModel {
 
     async getOverdueTasks(userId?: string): Promise<Task[]> {
         let query = 'SELECT * FROM tasks WHERE isOverdue = 1';
-        const params: any[] = [];
+        const params: unknown[] = [];
 
         if (userId) {
             query += ' AND userId = ?';

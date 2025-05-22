@@ -1,4 +1,4 @@
-import { TaskModel, CreateTaskRequest, UpdateTaskRequest, Task } from '../db/models/task';
+import type { TaskModel, CreateTaskRequest, UpdateTaskRequest, Task } from '../db/models/task';
 import { logger } from '../lib/logger';
 
 export class TaskService {
@@ -8,7 +8,7 @@ export class TaskService {
         this.taskModel = taskModel;
     }
 
-    async listTasks(filters?: any) {
+    async listTasks(filters?: Record<string, unknown>) {
         logger.info('route=tasks method=GET action=list', { filters });
         return this.taskModel.getAllTasks(filters);
     }

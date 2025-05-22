@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { TaskModel, CreateTaskRequest, UpdateTaskRequest } from '../db/models/task';
-import { DatabaseContext } from '../middleware/database';
+import type { TaskModel, CreateTaskRequest, UpdateTaskRequest } from '../db/models/task';
+import type { DatabaseContext } from '../middleware/database';
 import { TaskService } from '../services/taskService';
 import { logger } from '../lib/logger';
 
