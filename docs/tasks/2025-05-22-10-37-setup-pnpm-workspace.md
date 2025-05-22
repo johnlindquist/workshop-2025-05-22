@@ -45,7 +45,7 @@ Navigate to `packages/backend`. Initialize a new Node.js project using `pnpm ini
 
 ---
 
-## Commit 4: chore: Configure Root Scripts and Basic Linting
+## Commit 4: chore: Configure Root Scripts and Basic Linting ✅ 71b8d779969b182535f69123ecc523e9f3c81457
 **Description:**
 Add `dev:frontend` and `dev:backend` scripts to the root `package.json` to run the respective dev servers (e.g., `pnpm --filter frontend dev`). Add a `dev` script to run both concurrently (e.g. using `pnpm --parallel --stream -r dev`). Install and configure a root-level ESLint and Prettier setup if desired, or ensure individual package setups are consistent.
 

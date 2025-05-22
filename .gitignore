@@ -153,3 +153,4 @@ i18n/
 # Temporary files and directories (e.g., during Blitz.js installation)
 .blitz-build/
 .blitz/
+tmp/
