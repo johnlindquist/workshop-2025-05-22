@@ -105,7 +105,7 @@ After updating scripts, run `pnpm check` (or `pnpm biome check --write .`) to ap
 
 ---
 
-## Commit 4: test: Verify application functionality after Biome migration
+## Commit 4: test: Verify application functionality after Biome migration ✅ d487c9d7e6dc80fd28d38010c8eed2b5bdd51d8b
 **Description:**
 This commit focuses on ensuring that the Biome migration and subsequent code modifications (formatting, auto-fixes) have not introduced any regressions.
 
